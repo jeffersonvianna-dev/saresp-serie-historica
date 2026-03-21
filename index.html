@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SARESP 2025</title>
+  <style>
+    :root {
+      --bg: #f3f5f8;
+      --panel: #ffffff;
+      --ink: #1d2b3a;
+      --muted: #5c6b79;
+      --line: #d9dee6;
+      --orange: #ff7f0e;
+      --yellow: #f4b400;
+      --light-green: #8bcf7a;
+      --green: #2ca02c;
+      --navy: #0d3b66;
+      --shadow: 0 14px 32px rgba(29, 43, 58, 0.08);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background: linear-gradient(180deg, #ffffff 0, #ffffff 120px, var(--bg) 120px, var(--bg) 100%);
+    }
+
+    .shell { max-width: 1520px; margin: 0 auto; padding: 24px; }
+    .hero { padding: 14px 0 22px; }
+    .eyebrow {
+      display: inline-block;
+      padding: 10px 18px;
+      background: var(--navy);
+      color: #fff;
+      font-size: clamp(1.8rem, 4vw, 2.9rem);
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .summary-card {
+      padding: 16px 18px;
+      margin-top: 18px;
+    }
+    .summary-title {
+      margin: 0 0 12px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .summary-table-wrap { overflow-x: auto; }
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+    }
+    .summary-table th, .summary-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #e6ebf2;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .summary-table th:first-child, .summary-table td:first-child {
+      text-align: left;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .delta-pos { color: #167c3f; font-weight: 700; }
+    .delta-neg { color: #b54708; font-weight: 700; }
+    .delta-neutral { color: var(--muted); font-weight: 700; }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(220px, 1fr));
+      gap: 16px;
+      padding: 18px;
+      margin-top: 18px;
+    }
+    .field label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .field select {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 18px;
+      padding: 14px 18px;
+      font-size: 0.95rem;
+      color: var(--ink);
+      background: #fff;
+    }
+
+    .layout { margin-top: 18px; }
+    .chart-card { padding: 20px; }
+    .chart-wrap {
+      position: relative;
+      border: 2px solid #3a4754;
+      padding: 18px 18px 12px 54px;
+      background: #fff;
+      min-height: 580px;
+    }
+    .chart-heading { margin: 0 0 12px; text-align: center; font-size: 0.98rem; font-weight: 800; }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 12px;
+      padding: 10px 14px;
+      border: 1px solid #d9dee6;
+      background: #fff;
+    }
+    .legend h3 { margin: 0; font-size: 0.95rem; }
+    .legend-item { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
+    .legend-swatch { width: 30px; height: 3px; position: relative; display: inline-block; }
+    .legend-swatch::after {
+      content: "";
+      position: absolute;
+      right: -1px;
+      top: -3px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+    .axis-label-y {
+      position: absolute;
+      left: -2px;
+      top: 54%;
+      transform: rotate(-90deg) translateY(50%);
+      transform-origin: left top;
+      font-weight: 600;
+    }
+    .axis-label-x { text-align: center; margin-top: 10px; font-weight: 600; }
+    .note { margin-top: 14px; color: var(--muted); font-size: 0.88rem; line-height: 1.5; }
+    .foot-table-wrap { margin-top: 14px; overflow-x: auto; }
+    .foot-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.74rem;
+      color: var(--muted);
+    }
+    .foot-table th, .foot-table td {
+      padding: 6px 8px;
+      border-bottom: 1px solid #e6ebf2;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .foot-table th:first-child, .foot-table td:first-child {
+      text-align: left;
+      font-weight: 700;
+      color: var(--ink);
+      position: sticky;
+      left: 0;
+      background: #fff;
+    }
+
+    @media (max-width: 760px) {
+      .shell { padding: 14px; }
+      .toolbar { grid-template-columns: 1fr; }
+      .chart-wrap { padding: 16px 10px 12px 36px; min-height: 480px; }
+      .axis-label-y { position: static; transform: none; margin-bottom: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <div class="eyebrow">SARESP - Série Histórica</div>
+    </section>
+
+    <section class="panel summary-card">
+      <h2 class="summary-title">Variação (%) da Proficiência entre 2024 e 2025</h2>
+      <div class="summary-table-wrap">
+        <table class="summary-table">
+          <tbody id="summaryTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="toolbar panel">
+      <div class="field">
+        <label for="networkFilter">Rede</label>
+        <select id="networkFilter"></select>
+      </div>
+      <div class="field">
+        <label for="gradeFilter">Serie</label>
+        <select id="gradeFilter"></select>
+      </div>
+      <div class="field">
+        <label for="componentFilter">Componente</label>
+        <select id="componentFilter"></select>
+      </div>
+    </section>
+
+    <section class="layout">
+      <article class="panel chart-card">
+        <div class="chart-wrap">
+          <div class="axis-label-y">Media de Proficiencia</div>
+          <h3 class="chart-heading">Evolucao da Proficiencia</h3>
+          <svg id="lineChart" viewBox="0 0 900 520" width="100%" aria-label="Grafico de serie historica"></svg>
+          <div class="axis-label-x">Ano</div>
+        </div>
+        <div class="legend">
+          <h3>Tipo de Ensino</h3>
+          <div class="legend-item"><span class="legend-swatch" style="color: var(--orange); background: var(--orange);"></span>9 HORAS (&lt;2020)</div>
+          <div class="legend-item"><span class="legend-swatch" style="color: var(--yellow); background: var(--yellow);"></span>9 HORAS (2020+)</div>
+          <div class="legend-item"><span class="legend-swatch" style="color: var(--light-green); background: var(--light-green);"></span>7 HORAS (2020+)</div>
+          <div class="legend-item"><span class="legend-swatch" style="color: var(--green); background: var(--green);"></span>Parcial</div>
+        </div>
+        <div class="foot-table-wrap">
+          <table class="foot-table">
+            <tbody id="footTableBody"></tbody>
+          </table>
+        </div>
+        <p class="note" id="footnote"></p>
+      </article>
+    </section>
+  </div>
+
+  <script src="./data/dashboard-data.js"></script>
+  <script>
+    const DATA = window.SARESP_DATA || { generatedAt: "", years: [], networks: [], grades: [], components: [], series: [] };
+    const ALL = "Todos";
+    const TYPE_ORDER = ["9 HORAS", "9 HORAS 2020+", "7 HORAS", "Escola Regular"];
+    const TYPE_COLORS = {
+      "9 HORAS": "#ff7f0e",
+      "9 HORAS 2020+": "#f4b400",
+      "7 HORAS": "#8bcf7a",
+      "Escola Regular": "#2ca02c"
+    };
+
+    const networkFilter = document.getElementById("networkFilter");
+    const gradeFilter = document.getElementById("gradeFilter");
+    const componentFilter = document.getElementById("componentFilter");
+    const fmtInt = new Intl.NumberFormat("pt-BR");
+    const fmtNum = new Intl.NumberFormat("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+    const fmtPct = new Intl.NumberFormat("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+    const ALLOWED_GRADES = ["5º Ano EF", "9º Ano EF"];
+    const ALLOWED_COMPONENTS = ["LÍNGUA PORTUGUESA", "MATEMÁTICA"];
+    const ALLOWED_NETWORKS = ["Estadual", "Municipal"];
+    const SUMMARY_ROWS = [
+      { key: "9 HORAS", label: "9 HORAS (<2020)" },
+      { key: "9 HORAS 2020+", label: "9 HORAS (2020+)" },
+      { key: "7 HORAS", label: "7 HORAS (2020+)" },
+      { key: "Escola Regular", label: "PARCIAL" },
+      { key: "SEDUC", label: "SEDUC" }
+    ];
+    const SUMMARY_COLUMNS = [
+      { grade: "5º Ano EF", component: "LÍNGUA PORTUGUESA", label: "LP 5EF" },
+      { grade: "5º Ano EF", component: "MATEMÁTICA", label: "MT 5EF" },
+      { grade: "9º Ano EF", component: "LÍNGUA PORTUGUESA", label: "LP 9EF" },
+      { grade: "9º Ano EF", component: "MATEMÁTICA", label: "MT 9EF" }
+    ];
+
+    function normalizeGrade(value) {
+      if (typeof value !== "string" || !value) return value;
+      const cleaned = value.trim();
+      const map = {
+        "2� Ano EF": "2º Ano EF",
+        "2ï¿½ Ano EF": "2º Ano EF",
+        "2º Ano EF": "2º Ano EF",
+        "3� Ano EF": "3º Ano EF",
+        "3ï¿½ Ano EF": "3º Ano EF",
+        "3º Ano EF": "3º Ano EF",
+        "5� Ano EF": "5º Ano EF",
+        "5ï¿½ Ano EF": "5º Ano EF",
+        "5º Ano EF": "5º Ano EF",
+        "7� Ano EF": "7º Ano EF",
+        "7ï¿½ Ano EF": "7º Ano EF",
+        "7º Ano EF": "7º Ano EF",
+        "9� Ano EF": "9º Ano EF",
+        "9ï¿½ Ano EF": "9º Ano EF",
+        "9º Ano EF": "9º Ano EF",
+        "EM-3� s�rie": "EM-3ª série",
+        "EM-3ï¿½ sï¿½rie": "EM-3ª série",
+        "EM-3ª série": "EM-3ª série"
+      };
+      return map[cleaned] || cleaned;
+    }
+
+    function normalizeComponent(value) {
+      if (typeof value !== "string" || !value) return value;
+      const cleaned = value.trim();
+      const map = {
+        "L�NGUA PORTUGUESA": "LÍNGUA PORTUGUESA",
+        "Lï¿½NGUA PORTUGUESA": "LÍNGUA PORTUGUESA",
+        "LÍNGUA PORTUGUESA": "LÍNGUA PORTUGUESA",
+        "MATEM�TICA": "MATEMÁTICA",
+        "MATEMï¿½TICA": "MATEMÁTICA",
+        "MATEMÁTICA": "MATEMÁTICA",
+        "CI�NCIAS": "CIÊNCIAS",
+        "CIÊNCIAS": "CIÊNCIAS",
+        "HIST�RIA": "HISTÓRIA",
+        "HISTÓRIA": "HISTÓRIA",
+        "GEOGRAFIA": "GEOGRAFIA"
+      };
+      return map[cleaned] || cleaned;
+    }
+
+    const SUMMARY_COLUMNS_NORMALIZED = SUMMARY_COLUMNS.map(column => ({
+      ...column,
+      grade: normalizeGrade(column.grade),
+      component: normalizeComponent(column.component)
+    }));
+
+    DATA.series = (DATA.series || []).map(item => ({
+      ...item,
+      component: normalizeComponent(item.component),
+      grade: normalizeGrade(item.grade)
+    })).filter(item =>
+      ALLOWED_NETWORKS.includes(item.network) &&
+      ALLOWED_GRADES.includes(item.grade) &&
+      ALLOWED_COMPONENTS.includes(item.component)
+    );
+
+    DATA.networks = [...new Set(DATA.series.map(item => item.network))].sort((a, b) => a.localeCompare(b, "pt-BR"));
+    DATA.grades = [...new Set(DATA.series.map(item => item.grade))].sort((a, b) => a.localeCompare(b, "pt-BR"));
+    DATA.components = [...new Set(DATA.series.map(item => item.component))].sort((a, b) => a.localeCompare(b, "pt-BR"));
+
+    function fillSingleSelect(select, values) {
+      select.innerHTML = "";
+      values.forEach(value => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = value;
+        select.appendChild(option);
+      });
+    }
+
+    function fillNetworkSelect(select, values) {
+      select.innerHTML = "";
+      const allOption = document.createElement("option");
+      allOption.value = ALL;
+      allOption.textContent = ALL;
+      select.appendChild(allOption);
+      values.forEach(value => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = value;
+        select.appendChild(option);
+      });
+    }
+
+    function filteredSeries() {
+      return DATA.series.filter(item =>
+        (networkFilter.value === ALL || item.network === networkFilter.value) &&
+        item.grade === gradeFilter.value &&
+        item.component === componentFilter.value
+      );
+    }
+
+    function networkSeries() {
+      return DATA.series.filter(item =>
+        (networkFilter.value === ALL || item.network === networkFilter.value)
+      );
+    }
+
+    function findSeriesRow(rows, year, grade, component, tipoEnsino) {
+      return rows.find(item =>
+        Number(item.year) === year &&
+        item.grade === grade &&
+        item.component === component &&
+        item.tipoEnsino === tipoEnsino
+      );
+    }
+
+    function weightedAverage(rows, year, grade, component) {
+      const scoped = rows.filter(item =>
+        Number(item.year) === year &&
+        item.grade === grade &&
+        item.component === component &&
+        item.averageScore !== null &&
+        Number(item.recordCount || 0) > 0
+      );
+      const totalWeight = scoped.reduce((acc, item) => acc + Number(item.recordCount || 0), 0);
+      if (!totalWeight) return null;
+      const totalScore = scoped.reduce((acc, item) => acc + (Number(item.averageScore || 0) * Number(item.recordCount || 0)), 0);
+      return totalScore / totalWeight;
+    }
+
+    function deltaValue(current, previous) {
+      if (current === null || previous === null || previous === 0) return null;
+      return ((current - previous) / previous) * 100;
+    }
+
+    function formatDeltaCell(delta) {
+      if (delta === null || Number.isNaN(delta)) {
+        return `<span class="delta-neutral">-</span>`;
+      }
+      const className = delta > 0.0001 ? "delta-pos" : delta < -0.0001 ? "delta-neg" : "delta-neutral";
+      const signal = delta > 0.0001 ? "+" : "";
+      return `<span class="${className}">${signal}${fmtPct.format(delta)}%</span>`;
+    }
+
+    function renderSummaryTable() {
+      const rows = networkSeries();
+      const markup = `
+        <tr>
+          <th></th>
+          ${SUMMARY_COLUMNS_NORMALIZED.map(column => `<th>${column.label}</th>`).join("")}
+        </tr>
+        ${SUMMARY_ROWS.map(summaryRow => `
+          <tr>
+            <td>${summaryRow.label}</td>
+            ${SUMMARY_COLUMNS_NORMALIZED.map(column => {
+              let value2024 = null;
+              let value2025 = null;
+              if (summaryRow.key === "SEDUC") {
+                value2024 = weightedAverage(rows, 2024, column.grade, column.component);
+                value2025 = weightedAverage(rows, 2025, column.grade, column.component);
+              } else {
+                value2024 = findSeriesRow(rows, 2024, column.grade, column.component, summaryRow.key)?.averageScore ?? null;
+                value2025 = findSeriesRow(rows, 2025, column.grade, column.component, summaryRow.key)?.averageScore ?? null;
+              }
+              return `<td>${formatDeltaCell(deltaValue(value2025, value2024))}</td>`;
+            }).join("")}
+          </tr>
+        `).join("")}
+      `;
+      document.getElementById("summaryTableBody").innerHTML = markup;
+    }
+
+    function chartSeries(rows) {
+      const years = [...new Set(rows.map(item => Number(item.year)))].sort((a, b) => a - b);
+      return TYPE_ORDER.map(type => ({
+        type,
+        values: years.map(year => rows.find(item => Number(item.year) === year && item.tipoEnsino === type) || { year, averageScore: null, schoolCount: 0, recordCount: 0 })
+      }));
+    }
+
+    function drawChart(rows) {
+      const svg = document.getElementById("lineChart");
+      const series = chartSeries(rows);
+      const years = [...new Set(rows.map(item => Number(item.year)))].sort((a, b) => a - b);
+      const points = series.flatMap(line => line.values.map(point => point.averageScore).filter(value => value !== null));
+
+      if (!years.length || !points.length) {
+        svg.innerHTML = `<text x="450" y="250" text-anchor="middle" font-size="22" fill="#5c6b79">Sem dados para o filtro selecionado.</text>`;
+        return { years: [], series };
+      }
+
+      const min = Math.floor((Math.min(...points) - 5) / 5) * 5;
+      const max = Math.ceil((Math.max(...points) + 5) / 5) * 5;
+      const width = 900;
+      const height = 520;
+      const margin = { top: 24, right: 40, bottom: 54, left: 60 };
+      const innerW = width - margin.left - margin.right;
+      const innerH = height - margin.top - margin.bottom;
+      const x = year => {
+        const idx = years.indexOf(year);
+        return margin.left + (idx / Math.max(years.length - 1, 1)) * innerW;
+      };
+      const y = value => margin.top + (1 - ((value - min) / Math.max(max - min, 1))) * innerH;
+
+      let markup = `
+        <defs>
+          <filter id="labelShadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="1" dy="1.5" stdDeviation="1.2" flood-color="#ffffff" flood-opacity="0.95"/>
+          </filter>
+        </defs>
+      `;
+      let labelMarkup = "";
+      for (let tick = min; tick <= max; tick += 10) {
+        const py = y(tick);
+        markup += `<line x1="${margin.left}" y1="${py}" x2="${width - margin.right}" y2="${py}" stroke="#e2e7ed" stroke-width="1"/>`;
+        markup += `<text x="${margin.left - 12}" y="${py + 5}" text-anchor="end" font-size="16" fill="#44515d">${tick}</text>`;
+      }
+
+      years.forEach(year => {
+        const px = x(year);
+        markup += `<line x1="${px}" y1="${margin.top}" x2="${px}" y2="${height - margin.bottom}" stroke="#f0f3f6" stroke-width="1"/>`;
+        markup += `<text x="${px}" y="${height - 20}" text-anchor="middle" font-size="18" fill="#2b3744">${year}</text>`;
+      });
+
+      function shouldLabelPoint() {
+        return true;
+      }
+
+      function labelTooClose(current, accepted) {
+        return accepted.some(item =>
+          Math.abs(item.x - current.x) < 34 &&
+          Math.abs(item.y - current.y) < 18
+        );
+      }
+
+      series.forEach(line => {
+        const valid = line.values.filter(point => point.averageScore !== null);
+        if (!valid.length) return;
+        const path = valid.map((point, index) => `${index === 0 ? "M" : "L"} ${x(point.year)} ${y(point.averageScore)}`).join(" ");
+        markup += `<path d="${path}" fill="none" stroke="${TYPE_COLORS[line.type]}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>`;
+        const acceptedLabels = [];
+        valid.forEach((point, index) => {
+          const px = x(point.year);
+          const py = y(point.averageScore);
+          const labelConfig = line.type === "9 HORAS"
+            ? { dx: 0, dy: -18 }
+            : line.type === "9 HORAS 2020+"
+              ? { dx: 14, dy: -18 }
+              : line.type === "7 HORAS"
+              ? { dx: -18, dy: -14 }
+              : { dx: 0, dy: 26 };
+          markup += `<circle cx="${px}" cy="${py}" r="6" fill="${TYPE_COLORS[line.type]}"/>`;
+          const labelPoint = { x: px + labelConfig.dx, y: py + labelConfig.dy };
+          if (shouldLabelPoint(valid, index) && !labelTooClose(labelPoint, acceptedLabels)) {
+            acceptedLabels.push(labelPoint);
+            labelMarkup += `<text x="${labelPoint.x}" y="${labelPoint.y}" text-anchor="middle" font-size="8" font-weight="700" fill="${TYPE_COLORS[line.type]}" stroke="#ffffff" stroke-width="4" paint-order="stroke fill" filter="url(#labelShadow)">${fmtNum.format(point.averageScore)}</text>`;
+          }
+        });
+      });
+
+      svg.innerHTML = markup + labelMarkup;
+      return { years, series };
+    }
+
+    function renderMetrics() {
+      const schoolStats = (DATA.schoolStats || []).filter(item =>
+        (networkFilter.value === ALL || item.network === networkFilter.value) &&
+        normalizeGrade(item.grade) === gradeFilter.value
+      );
+
+      const years = [...new Set(schoolStats.map(item => Number(item.year)))].sort((a, b) => a - b);
+      const yearStats = years.map(year =>
+        schoolStats.find(item => Number(item.year) === year) || {
+          year,
+          nineHoursCount: 0,
+          sevenHoursCount: 0,
+          regularCount: 0,
+          totalCount: 0
+        }
+      );
+
+      document.getElementById("footTableBody").innerHTML = `
+        <tr>
+          <th></th>
+          ${yearStats.map(item => `<th>${item.year}</th>`).join("")}
+        </tr>
+        <tr>
+          <td>9 HORAS</td>
+          ${yearStats.map(item => `<td>${fmtInt.format(item.nineHoursCount || 0)}</td>`).join("")}
+        </tr>
+        <tr>
+          <td>7 HORAS</td>
+          ${yearStats.map(item => `<td>${fmtInt.format(item.sevenHoursCount || 0)}</td>`).join("")}
+        </tr>
+        <tr>
+          <td>PARCIAL</td>
+          ${yearStats.map(item => `<td>${fmtInt.format(item.regularCount || 0)}</td>`).join("")}
+        </tr>
+        <tr>
+          <td>TOTAL</td>
+          ${yearStats.map(item => `<td>${fmtInt.format(item.totalCount || 0)}</td>`).join("")}
+        </tr>
+      `;
+
+      document.getElementById("footnote").textContent = "*Contagem de escolas por ano considerando a adesao PEI da MIEST.";
+    }
+
+    function render() {
+      const rows = filteredSeries();
+      renderSummaryTable();
+      const payload = drawChart(rows);
+      renderMetrics(payload);
+    }
+
+    fillNetworkSelect(networkFilter, DATA.networks || []);
+    fillSingleSelect(gradeFilter, DATA.grades || []);
+    fillSingleSelect(componentFilter, DATA.components || []);
+    networkFilter.addEventListener("change", render);
+    gradeFilter.addEventListener("change", render);
+    componentFilter.addEventListener("change", render);
+
+    const preferredNetwork = [...networkFilter.options].find(option => option.value === "Estadual") || networkFilter.options[0];
+    const preferredGrade = [...gradeFilter.options].find(option => option.value === "9º Ano EF") || gradeFilter.options[0];
+    const preferredComponent = [...componentFilter.options].find(option => option.value === "MATEMÁTICA") || componentFilter.options[0];
+    if (preferredNetwork) networkFilter.value = preferredNetwork.value;
+    if (preferredGrade) gradeFilter.value = preferredGrade.value;
+    if (preferredComponent) componentFilter.value = preferredComponent.value;
+
+    render();
+  </script>
+</body>
+</html>
