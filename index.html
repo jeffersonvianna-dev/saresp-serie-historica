@@ -170,6 +170,28 @@
       background: #fff;
     }
 
+    .sp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    .sp-cell {
+      border: 2px solid #3a4754;
+      padding: 14px;
+      background: #fff;
+    }
+    .sp-title {
+      text-align: center;
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .sp-svg { display: block; width: 100%; height: auto; }
+
+    @media (max-width: 900px) {
+      .sp-grid { grid-template-columns: 1fr; }
+    }
     @media (max-width: 760px) {
       .shell { padding: 14px; }
       .toolbar { grid-template-columns: 1fr; }
@@ -234,17 +256,26 @@
 
     <section class="layout">
       <article class="panel chart-card">
-        <div class="chart-wrap">
-          <div class="axis-label-y">Media de Proficiencia</div>
-          <h3 class="chart-heading">Serie Historica Consolidada - SP (todos os grupos)</h3>
-          <svg id="lineChartSP" viewBox="0 0 900 520" width="100%" aria-label="Grafico de serie historica consolidada SP"></svg>
-          <div class="axis-label-x">Ano</div>
+        <h3 class="chart-heading" style="font-size: 1.1rem; margin-bottom: 16px;">Serie Historica Consolidada - SP (todos os grupos)</h3>
+        <div class="sp-grid">
+          <div class="sp-cell">
+            <div class="sp-title">LP - 5º Ano EF</div>
+            <svg class="sp-svg" data-grade="5º Ano EF" data-component="LÍNGUA PORTUGUESA" viewBox="0 0 900 520" width="100%"></svg>
+          </div>
+          <div class="sp-cell">
+            <div class="sp-title">MT - 5º Ano EF</div>
+            <svg class="sp-svg" data-grade="5º Ano EF" data-component="MATEMÁTICA" viewBox="0 0 900 520" width="100%"></svg>
+          </div>
+          <div class="sp-cell">
+            <div class="sp-title">LP - 9º Ano EF</div>
+            <svg class="sp-svg" data-grade="9º Ano EF" data-component="LÍNGUA PORTUGUESA" viewBox="0 0 900 520" width="100%"></svg>
+          </div>
+          <div class="sp-cell">
+            <div class="sp-title">MT - 9º Ano EF</div>
+            <svg class="sp-svg" data-grade="9º Ano EF" data-component="MATEMÁTICA" viewBox="0 0 900 520" width="100%"></svg>
+          </div>
         </div>
-        <div class="legend">
-          <h3>Consolidado</h3>
-          <div class="legend-item"><span class="legend-swatch" style="color: var(--navy); background: var(--navy);"></span>SP (media ponderada por nº de alunos)</div>
-        </div>
-        <p class="note">Media ponderada por recordCount (nº de alunos) agregando 9 HORAS, 7 HORAS e Parcial em um unico valor por ano.</p>
+        <p class="note">Media ponderada por nº de alunos agregando 9 HORAS, 7 HORAS e Parcial. Reage ao filtro de Rede; ignora os filtros de Serie/Componente.</p>
       </article>
     </section>
   </div>
@@ -587,19 +618,16 @@
       document.getElementById("footnote").textContent = "*Contagem de escolas por ano considerando a adesao PEI da MIEST.";
     }
 
-    function drawChartSP(rows) {
-      const svg = document.getElementById("lineChartSP");
-      if (!svg) return;
+    function drawSPCell(svg, grade, component) {
+      const rows = networkSeries().filter(item => item.grade === grade && item.component === component);
       const years = [...new Set(rows.map(item => Number(item.year)))].sort((a, b) => a - b);
-      const grade = gradeFilter.value;
-      const component = componentFilter.value;
       const consolidated = years.map(year => ({
         year,
         averageScore: weightedAverage(rows, year, grade, component)
       })).filter(point => point.averageScore !== null);
 
       if (!consolidated.length) {
-        svg.innerHTML = `<text x="450" y="250" text-anchor="middle" font-size="22" fill="#5c6b79">Sem dados para o filtro selecionado.</text>`;
+        svg.innerHTML = `<text x="450" y="250" text-anchor="middle" font-size="22" fill="#5c6b79">Sem dados.</text>`;
         return;
       }
 
@@ -608,7 +636,7 @@
       const max = Math.ceil((Math.max(...points) + 5) / 5) * 5;
       const width = 900;
       const height = 520;
-      const margin = { top: 24, right: 40, bottom: 54, left: 60 };
+      const margin = { top: 28, right: 40, bottom: 54, left: 60 };
       const innerW = width - margin.left - margin.right;
       const innerH = height - margin.top - margin.bottom;
       const xYears = consolidated.map(p => p.year);
@@ -617,10 +645,11 @@
         return margin.left + (idx / Math.max(xYears.length - 1, 1)) * innerW;
       };
       const y = value => margin.top + (1 - ((value - min) / Math.max(max - min, 1))) * innerH;
+      const filterId = `labelShadowSP_${grade.replace(/[^a-zA-Z0-9]/g, "")}_${component.replace(/[^a-zA-Z0-9]/g, "")}`;
 
       let markup = `
         <defs>
-          <filter id="labelShadowSP" x="-20%" y="-20%" width="140%" height="140%">
+          <filter id="${filterId}" x="-20%" y="-20%" width="140%" height="140%">
             <feDropShadow dx="1" dy="1.5" stdDeviation="1.2" flood-color="#ffffff" flood-opacity="0.95"/>
           </filter>
         </defs>
@@ -635,7 +664,7 @@
       xYears.forEach(year => {
         const px = x(year);
         markup += `<line x1="${px}" y1="${margin.top}" x2="${px}" y2="${height - margin.bottom}" stroke="#f0f3f6" stroke-width="1"/>`;
-        markup += `<text x="${px}" y="${height - 20}" text-anchor="middle" font-size="18" fill="#2b3744">${year}</text>`;
+        markup += `<text x="${px}" y="${height - 20}" text-anchor="middle" font-size="16" fill="#2b3744">${year}</text>`;
       });
 
       const path = consolidated.map((p, i) => `${i === 0 ? "M" : "L"} ${x(p.year)} ${y(p.averageScore)}`).join(" ");
@@ -646,17 +675,23 @@
         const px = x(p.year);
         const py = y(p.averageScore);
         markup += `<circle cx="${px}" cy="${py}" r="6" fill="#0d3b66"/>`;
-        labelMarkup += `<text x="${px}" y="${py - 14}" text-anchor="middle" font-size="13" font-weight="700" fill="#0d3b66" stroke="#ffffff" stroke-width="4" paint-order="stroke fill" filter="url(#labelShadowSP)">${fmtNum.format(p.averageScore)}</text>`;
+        labelMarkup += `<text x="${px}" y="${py - 14}" text-anchor="middle" font-size="15" font-weight="700" fill="#0d3b66" stroke="#ffffff" stroke-width="4" paint-order="stroke fill" filter="url(#${filterId})">${fmtNum.format(p.averageScore)}</text>`;
       });
 
       svg.innerHTML = markup + labelMarkup;
+    }
+
+    function drawAllSPCells() {
+      document.querySelectorAll(".sp-svg").forEach(svg => {
+        drawSPCell(svg, normalizeGrade(svg.dataset.grade), normalizeComponent(svg.dataset.component));
+      });
     }
 
     function render() {
       const rows = filteredSeries();
       renderSummaryTable();
       const payload = drawChart(rows);
-      drawChartSP(rows);
+      drawAllSPCells();
       renderMetrics(payload);
     }
 
