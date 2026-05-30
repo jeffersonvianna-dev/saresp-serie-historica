@@ -5,3 +5,6 @@
 !data/
 data/*
 !data/dashboard-data.js
+!docs/
+docs/*
+!docs/contexto-mapa-dependencia-descritores.md
