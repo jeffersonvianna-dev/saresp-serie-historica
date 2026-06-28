@@ -6,5 +6,10 @@
 data/*
 !data/dashboard-data.js
 
+!.pre-commit-config.yaml
+!.github/
+!.github/workflows/
+!.github/workflows/secret-scan.yml
+
 .env*
 .mcp.json
