@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proposta Cactus — Recomposição das Aprendizagens | SEDUC-PA</title>
+<style>
+  :root{
+    --green:#47ad4e;        /* verde vivo (capa, blocos de título) */
+    --green-soft:#76b064;   /* verde header/tabelas */
+    --green-dark:#2f7d38;
+    --green-wash:#eef6ee;
+    --yellow:#f5a711;
+    --red:#e43616;
+    --blue:#2b5c9b;
+    --ink:#20302a;
+    --body:#33403a;
+    --muted:#6b7a72;
+    --line:#d7e0d8;
+    --paper:#ffffff;
+    --bg:#e9edea;
+    --maxw:900px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:"Segoe UI",-apple-system,Roboto,Arial,sans-serif;
+    color:var(--body);
+    background:var(--bg);
+    line-height:1.62;
+    font-size:16px;
+  }
+  .page{
+    max-width:var(--maxw);
+    margin:26px auto;
+    background:var(--paper);
+    box-shadow:0 18px 50px rgba(20,40,30,.14);
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* ---------- Gradiente inferior (assinatura visual Cactus) ---------- */
+  .stripe{height:12px;width:100%;display:flex;}
+  .stripe>i{display:block;height:100%;}
+  .stripe>i:nth-child(1){flex:1.1;background:var(--blue);}
+  .stripe>i:nth-child(2){flex:1.4;background:var(--green);}
+  .stripe>i:nth-child(3){flex:2.6;background:var(--yellow);}
+  .stripe>i:nth-child(4){flex:3.4;background:var(--red);}
+  .stripe>i:nth-child(5){flex:1.2;background:var(--blue);}
+
+  /* ---------- Logo cactus ---------- */
+  .cactus{width:34px;height:34px;display:inline-block;vertical-align:middle;}
+
+  /* ---------- CAPA ---------- */
+  .cover{position:relative;background:#122;}
+  .cover-top{
+    height:230px;
+    background:
+      linear-gradient(120deg,rgba(20,40,30,.35),rgba(20,40,30,.05)),
+      radial-gradient(circle at 78% 40%,#5a86a6,#274a63 70%);
+    position:relative;
+  }
+  .cover-badge{
+    position:absolute;top:0;left:44px;background:var(--green);
+    padding:16px 18px 20px;
+  }
+  .cover-badge .cactus{width:30px;height:30px;}
+  .cover-mid{display:flex;min-height:300px;}
+  .cover-photo{
+    flex:1.05;
+    background:
+      linear-gradient(180deg,rgba(20,40,30,.15),rgba(20,40,30,.55)),
+      radial-gradient(circle at 30% 30%,#c86b4a,#7a3b2f 75%);
+  }
+  .cover-title{
+    flex:1.15;background:var(--green);color:#fff;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:38px 44px;
+  }
+  .cover-title .eyebrow{
+    font-size:.82rem;letter-spacing:.22em;font-weight:700;
+    text-transform:uppercase;opacity:.92;margin-bottom:14px;
+  }
+  .cover-title h1{
+    margin:0;font-size:2.5rem;line-height:1.08;font-weight:800;
+    letter-spacing:-.01em;
+  }
+  .cover-title .sub{
+    margin-top:18px;font-size:1.02rem;font-weight:600;opacity:.96;
+    border-top:2px solid rgba(255,255,255,.4);padding-top:14px;max-width:340px;
+  }
+  .cover-foot{
+    display:flex;align-items:center;justify-content:space-between;
+    background:#fff;padding:14px 44px;gap:20px;flex-wrap:wrap;
+  }
+  .cover-foot .meta{font-size:.82rem;color:var(--muted);}
+  .cover-foot .meta strong{color:var(--ink);}
+  .badges{display:flex;gap:8px;flex-wrap:wrap;}
+  .badge{
+    border:1px solid var(--line);border-radius:50%;width:52px;height:52px;
+    display:flex;align-items:center;justify-content:center;text-align:center;
+    font-size:.44rem;font-weight:700;color:var(--green-dark);line-height:1.1;
+    text-transform:uppercase;padding:4px;
+  }
+
+  /* ---------- HEADER de seção (repete o cabeçalho do PDF) ---------- */
+  .runhead{
+    display:flex;align-items:stretch;justify-content:space-between;
+    border-bottom:1px solid var(--line);
+  }
+  .runhead .brand{
+    background:var(--green);display:flex;align-items:center;gap:12px;
+    padding:12px 20px;color:#fff;
+  }
+  .runhead .brand small{
+    font-size:.62rem;letter-spacing:.06em;font-weight:700;line-height:1.3;
+    text-transform:uppercase;color:#eafaea;
+  }
+  .runhead .blocks{display:flex;}
+  .runhead .blocks i{width:34px;}
+  .runhead .blocks i:nth-child(1){background:var(--green-soft);}
+  .runhead .blocks i:nth-child(2){background:var(--yellow);}
+  .runhead .blocks i:nth-child(3){background:var(--red);}
+
+  /* ---------- Conteúdo ---------- */
+  .content{padding:34px 54px 12px;}
+  .content.tight{padding-top:20px;}
+  h2.sec{
+    color:var(--green-dark);font-size:1.45rem;font-weight:800;
+    margin:6px 0 18px;letter-spacing:-.01em;
+    display:flex;align-items:baseline;gap:12px;
+  }
+  h2.sec .n{
+    color:#fff;background:var(--green);border-radius:8px;
+    font-size:.95rem;padding:3px 11px;font-weight:800;flex:none;
+    transform:translateY(-3px);
+  }
+  h3.sub{
+    color:var(--green-dark);font-size:1.08rem;font-weight:700;
+    margin:26px 0 8px;padding-left:12px;border-left:4px solid var(--green);
+  }
+  h4.sub2{color:var(--ink);font-size:.98rem;font-weight:700;margin:18px 0 4px;}
+  p{margin:0 0 12px;text-align:justify;}
+  .lead{font-size:1.05rem;color:var(--ink);}
+  ul.clean{margin:6px 0 14px;padding-left:20px;}
+  ul.clean li{margin-bottom:7px;}
+  .strong-green{color:var(--green-dark);font-weight:700;}
+  a{color:var(--blue);}
+
+  .callout{
+    background:var(--green-wash);border:1px solid #cfe6cf;border-left:5px solid var(--green);
+    border-radius:10px;padding:16px 20px;margin:16px 0;
+  }
+  .callout p:last-child{margin-bottom:0;}
+
+  /* KPIs contexto */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0 6px;}
+  .kpi{background:#fff;border:1px solid var(--line);border-top:4px solid var(--green);border-radius:12px;padding:14px 12px;text-align:center;}
+  .kpi .big{font-size:1.7rem;font-weight:800;color:var(--green-dark);line-height:1.1;}
+  .kpi .lbl{font-size:.74rem;color:var(--muted);margin-top:4px;line-height:1.3;}
+
+  /* Eixos cards */
+  .axes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0;}
+  .axis{border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:#fff;}
+  .axis .tag{display:inline-block;background:var(--green);color:#fff;font-size:.68rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:20px;margin-bottom:8px;}
+  .axis h4{margin:0 0 6px;color:var(--ink);font-size:1rem;}
+  .axis p{font-size:.9rem;margin:0;color:var(--body);}
+
+  /* Tabelas */
+  .tbl-wrap{overflow-x:auto;margin:14px 0 18px;}
+  table{width:100%;border-collapse:collapse;font-size:.9rem;background:#fff;}
+  thead th{background:var(--green-soft);color:#fff;font-weight:700;text-align:left;padding:11px 12px;border:1px solid #cfe0cf;font-size:.82rem;text-transform:uppercase;letter-spacing:.03em;}
+  tbody td{padding:10px 12px;border:1px solid var(--line);vertical-align:top;}
+  tbody tr:nth-child(even){background:#f6faf6;}
+  .obj-item{font-weight:800;color:var(--green-dark);text-align:center;width:44px;}
+  .unit{white-space:nowrap;font-weight:600;color:var(--ink);}
+  td.val,th.val{text-align:right;white-space:nowrap;}
+  .fill{
+    display:inline-block;min-width:96px;border-bottom:2px dashed var(--yellow);
+    color:#b07d00;font-weight:700;text-align:right;padding:0 2px;
+  }
+  .rowsum td{background:var(--green-wash);font-weight:800;color:var(--green-dark);}
+  .module-band{
+    background:var(--green);color:#fff;font-weight:800;letter-spacing:.03em;
+    padding:12px 16px;border-radius:10px 10px 0 0;font-size:1rem;
+    display:flex;justify-content:space-between;align-items:center;margin-top:26px;
+  }
+  .module-band .mtot{font-size:.92rem;font-weight:700;background:rgba(255,255,255,.18);padding:4px 12px;border-radius:20px;}
+  .global{
+    margin:28px 0 8px;border:2px solid var(--green);border-radius:14px;overflow:hidden;
+  }
+  .global .top{background:var(--green);color:#fff;padding:14px 20px;font-weight:800;font-size:1.1rem;letter-spacing:.02em;}
+  .global .rows{padding:6px 20px 14px;}
+  .global .r{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line);}
+  .global .r:last-child{border-bottom:0;}
+  .global .r.tot{font-size:1.25rem;font-weight:800;color:var(--green-dark);border-top:2px solid var(--green);margin-top:4px;}
+
+  /* Dados da empresa */
+  .company{display:grid;grid-template-columns:1fr 1fr;gap:0 26px;margin:14px 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+  .company .cell{padding:12px 16px;border-bottom:1px solid var(--line);}
+  .company .cell .k{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700;}
+  .company .cell .v{font-weight:600;color:var(--ink);}
+  .sign{margin-top:26px;display:flex;flex-direction:column;align-items:center;gap:4px;}
+  .sign .line{width:320px;max-width:80%;border-top:1.5px solid var(--ink);margin-bottom:4px;}
+  .sign small{color:var(--muted);}
+
+  .note{font-size:.82rem;color:var(--muted);}
+  .divider{height:1px;background:var(--line);margin:26px 0;}
+
+  /* Rodapé de página */
+  .pagefoot{padding:0;}
+  .pagefoot .fbar{display:flex;justify-content:space-between;align-items:center;padding:10px 44px;font-size:.76rem;color:var(--muted);}
+
+  /* ---------- Índice ---------- */
+  .toc{background:var(--green);color:#fff;padding:34px 54px;}
+  .toc h2{font-size:2.2rem;font-weight:800;margin:0 0 18px;letter-spacing:.02em;display:flex;align-items:center;gap:14px;}
+  .toc ol{list-style:none;margin:0;padding:0;columns:1;}
+  .toc li{padding:5px 0;border-bottom:1px dashed rgba(255,255,255,.28);}
+  .toc li.main{font-weight:700;font-size:1.02rem;margin-top:8px;}
+  .toc li.sub{opacity:.9;font-size:.9rem;padding-left:18px;border-bottom:0;}
+  .toc a{color:#fff;text-decoration:none;display:flex;justify-content:space-between;}
+  .toc a:hover{text-decoration:underline;}
+
+  @media (max-width:760px){
+    .content{padding:26px 22px 10px;}
+    .toc{padding:26px 22px;}
+    .cover-badge{left:22px;}
+    .cover-title{padding:26px 24px;}
+    .cover-title h1{font-size:1.9rem;}
+    .cover-foot{padding:14px 22px;}
+    .kpis{grid-template-columns:1fr 1fr;}
+    .axes,.company{grid-template-columns:1fr;}
+    .cover-mid{flex-direction:column;}
+    .runhead .brand small{display:none;}
+  }
+
+  @media print{
+    body{background:#fff;font-size:11.5pt;}
+    .page{box-shadow:none;margin:0;max-width:none;}
+    .no-print{display:none!important;}
+    h2.sec,.module-band,.global,.axis,.kpi{break-inside:avoid;}
+    thead th{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    .toc{page-break-after:always;}
+    .cover{page-break-after:always;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ======= barra de ação (não imprime) ======= -->
+<div class="no-print" style="max-width:900px;margin:16px auto 0;display:flex;gap:10px;justify-content:flex-end;padding:0 8px;">
+  <button onclick="window.print()" style="background:#47ad4e;color:#fff;border:0;border-radius:8px;padding:10px 18px;font-weight:700;cursor:pointer;font-size:.9rem;">Imprimir / Salvar em PDF</button>
+</div>
+
+<div class="page">
+
+  <!-- ============================ CAPA ============================ -->
+  <section class="cover">
+    <div class="cover-top">
+      <div class="cover-badge">
+        <svg class="cactus" viewBox="0 0 24 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Cactus">
+          <path d="M12 4v32M12 14c0-4-3-6-6-6-1 0 0 8 6 8M12 20c0-4 3-6 6-6 1 0 0 8-6 8" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M9 36h6" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="cover-mid">
+      <div class="cover-photo"></div>
+      <div class="cover-title">
+        <div class="eyebrow">Associação Cactus</div>
+        <h1>Recomposição das Aprendizagens por Competições e Mentorias</h1>
+        <div class="sub">Proposta técnica e comercial — SEDUC/PA · Cotação nº 2026/3001413</div>
+      </div>
+    </div>
+    <div class="cover-foot">
+      <div class="meta">
+        <div><strong>Objeto:</strong> Contratação de empresa especializada para a Recomposição das Aprendizagens, por meio de Competições e Mentorias.</div>
+        <div><strong>Programa:</strong> Educação Por Todo o Pará (BR-L1548) · Contrato de Empréstimo nº 5810-OC/BR · BID</div>
+      </div>
+      <div class="badges">
+        <div class="badge">ODS<br>Educação</div>
+        <div class="badge">ONG<br>Verificada</div>
+        <div class="badge">Trans<br>parência</div>
+        <div class="badge">DOAR</div>
+      </div>
+    </div>
+    <div class="stripe"><i></i><i></i><i></i><i></i><i></i></div>
+  </section>
+
+  <!-- ============================ ÍNDICE ============================ -->
+  <nav class="toc">
+    <h2>
+      <svg class="cactus" viewBox="0 0 24 40" style="width:26px;height:40px" fill="none"><path d="M12 4v32M12 14c0-4-3-6-6-6-1 0 0 8 6 8M12 20c0-4 3-6 6-6 1 0 0 8-6 8" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 36h6" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>
+      ÍNDICE
+    </h2>
+    <ol>
+      <li class="main"><a href="#s1"><span>1. Introdução</span></a></li>
+      <li class="main"><a href="#s2"><span>2. Sobre a Cactus</span></a></li>
+      <li class="main"><a href="#s3"><span>3. Especificações do Programa e do Objeto</span></a></li>
+      <li class="sub"><a href="#s3"><span>3.1. Proposta Pedagógica</span></a></li>
+      <li class="sub"><a href="#s32"><span>3.2. Tabela Descritiva dos Objetos</span></a></li>
+      <li class="main"><a href="#s4"><span>4. Precificação dos Objetos</span></a></li>
+      <li class="sub"><a href="#s4"><span>4.1. Valor dos Objetos e Escopo da Solução</span></a></li>
+      <li class="sub"><a href="#s42"><span>4.2. Precificação — Solução Cactus (Módulos 1, 2 e 3)</span></a></li>
+      <li class="sub"><a href="#sglobal"><span>Valor Global da Solução Cactus</span></a></li>
+      <li class="sub"><a href="#s43"><span>4.3. Considerações Finais</span></a></li>
+      <li class="main"><a href="#s5"><span>5. Dados da Proponente e Validade</span></a></li>
+    </ol>
+  </nav>
+
+  <!-- ============================ 1. INTRODUÇÃO ============================ -->
+  <div class="runhead">
+    <div class="brand">
+      <svg class="cactus" viewBox="0 0 24 40" fill="none"><path d="M12 4v32M12 14c0-4-3-6-6-6-1 0 0 8 6 8M12 20c0-4 3-6 6-6 1 0 0 8-6 8" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 36h6" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>
+      <small>Associação Cactus /<br>Recomposição das Aprendizagens · SEDUC-PA</small>
+    </div>
+    <div class="blocks"><i></i><i></i><i></i></div>
+  </div>
+
+  <section class="content" id="s1">
+    <h2 class="sec"><span class="n">1</span> Introdução</h2>
+    <p class="lead">A rede estadual de ensino do Pará atende, segundo o censo escolar de 2025 (INEP), <strong>987 escolas</strong>, com <strong>89.344 estudantes</strong> nos Anos Finais do Ensino Fundamental e <strong>301.654 no Ensino Médio</strong>, além de estudantes da EJA — aproximadamente 26% localizados em zonas rurais. Esse território, de escala continental e grande diversidade, apresenta um desafio central e uma enorme oportunidade: recompor e fazer progredir as aprendizagens dos estudantes.</p>
+
+    <p>Os indicadores de proficiência do SAEB (INEP 2023) evidenciam a urgência da ação: no 9º ano do Ensino Fundamental, apenas <strong>29% dos estudantes alcançam nível adequado em Língua Portuguesa e 9% em Matemática</strong>; na 3ª série do Ensino Médio, <strong>22% em Língua Portuguesa e apenas 2% em Matemática</strong>. Somam-se a isso as taxas de distorção idade-série (28,8% nos Anos Finais do EF e 33,6% no EM), com maior incidência nas regiões dos Carajás e do Marajó.</p>
+
+    <div class="kpis">
+      <div class="kpi"><div class="big">9%</div><div class="lbl">adequado em Matemática — 9º ano EF</div></div>
+      <div class="kpi"><div class="big">2%</div><div class="lbl">adequado em Matemática — 3ª série EM</div></div>
+      <div class="kpi"><div class="big">987</div><div class="lbl">escolas da rede estadual</div></div>
+      <div class="kpi"><div class="big">36</div><div class="lbl">meses de vigência contratual</div></div>
+    </div>
+
+    <p>Em consonância com o Decreto nº 12.391/2025 e com a Base Nacional Comum Curricular (BNCC), a <strong>Maratona de Recomposição das Aprendizagens</strong> proposta pela Cactus atua de forma sistêmica sobre o 9º ano do EF II e a 3ª série do EM, combinando <span class="strong-green">diagnóstico de proficiência</span>, uma <span class="strong-green">plataforma gamificada de progressão contínua</span>, um <span class="strong-green">programa estruturado de mentorias</span> entre estudantes de maior e menor desempenho, <span class="strong-green">formação continuada</span> de educadores e <span class="strong-green">competições, premiações e materiais didáticos</span> — tudo integrado por uma governança de dados e uma operação assistida ao longo de todo o contrato.</p>
+
+    <h3 class="sub">Objetivos estratégicos do programa</h3>
+    <ul class="clean">
+      <li><strong>Progressão da aprendizagem:</strong> reduzir de forma mensurável o percentual de estudantes com proficiência abaixo do básico em Língua Portuguesa e Matemática no 9º ano do EF e na 3ª série do EM.</li>
+      <li><strong>Mentorias com impacto:</strong> mobilizar os 5% de estudantes de maior desempenho como mentores e apoiar os 30% de menor desempenho como mentorados, criando uma cultura de aprendizagem colaborativa.</li>
+      <li><strong>Decisão baseada em evidências:</strong> entregar à SEDUC, às DREs e às escolas painéis e relatórios em tempo real que orientem a priorização pedagógica.</li>
+      <li><strong>Autonomia da rede:</strong> transferir conhecimento e realizar operação assistida para que a SEDUC opere a solução com autonomia ao final do ciclo.</li>
+    </ul>
+  </section>
+  <div class="pagefoot"><div class="stripe"><i></i><i></i><i></i><i></i><i></i></div><div class="fbar"><span>Associação Cactus</span><span>Proposta SEDUC-PA · 2026/3001413</span></div></div>
+
+  <!-- ============================ 2. SOBRE A CACTUS ============================ -->
+  <div class="runhead">
+    <div class="brand">
+      <svg class="cactus" viewBox="0 0 24 40" fill="none"><path d="M12 4v32M12 14c0-4-3-6-6-6-1 0 0 8 6 8M12 20c0-4 3-6 6-6 1 0 0 8-6 8" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 36h6" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>
+      <small>Associação Cactus /<br>Recomposição das Aprendizagens · SEDUC-PA</small>
+    </div>
+    <div class="blocks"><i></i><i></i><i></i></div>
+  </div>
+
+  <section class="content" id="s2">
+    <h2 class="sec"><span class="n">2</span> Sobre a Cactus</h2>
+    <p>Para enfrentar as desigualdades educacionais do Brasil e acelerar o desenvolvimento do talento nas redes públicas de ensino, a <strong>Associação Cactus</strong> criou um ecossistema de soluções educacionais focadas no desenvolvimento da aprendizagem, combinando gestão de projetos educacionais, conteúdos, plataformas e formação de professores, e uma cultura de alta performance acadêmica dentro da escola pública. Nosso trabalho é direcionado a redes municipais e estaduais e tem dois objetivos centrais: <strong>melhorar resultados de aprendizagem de forma mensurável</strong> e formar uma geração de jovens capazes de liderar o futuro econômico e social do país.</p>
+
+    <p>A Cactus atua com foco em Educação Básica, desenvolvendo programas que despertam protagonismo e disciplina intelectual nos alunos — como turmas olímpicas de Matemática, Ciências e Tecnologia — e, ao mesmo tempo, oferecem aos educadores instrumentos práticos para elevar a qualidade da sala de aula. Fazemos isso por meio de: materiais pedagógicos alinhados à BNCC e às exigências das avaliações externas; rotinas semanais de acompanhamento de desempenho; incentivo à resolução de problemas de alta complexidade cognitiva; e experiências de reconhecimento público que valorizam alunos, professores e gestores.</p>
+
+    <p>Nosso trabalho não é apenas pedagógico, é também de gestão. Acompanhamos indicadores de aprendizagem, engajamento e frequência dos estudantes e devolvemos relatórios que permitem ao gestor da rede tomar decisão com dados. Apoiamos o diretor da escola na construção de metas claras e factíveis, e criamos mecanismos de comunicação que aproximam as famílias do processo educativo.</p>
+
+    <p>Esse modelo tem reconhecimento nacional. A Associação Cactus já mobilizou centenas de milhares de estudantes da rede pública em todas as regiões do Brasil em programas como a <strong>Maratona Tech</strong> (programa nacional de tecnologia e resolução de problemas reais, apoiado por grandes empresas brasileiras), as <strong>Turmas Olímpicas</strong> (preparação de alto rendimento para olimpíadas de conhecimento) e formações continuadas de professores. Em diversas redes atendidas, registramos aumento consistente de engajamento estudantil e melhora de rendimento em Matemática e Ciências.</p>
+
+    <div class="callout">
+      <p>A Associação Cactus tem alta expertise em projetos relacionados a <strong>Olimpíadas Científicas de Matemática, Tecnologia e Educação Financeira</strong>, e conta com uma rede ampla de parceiros que são referência em formação de professores, construção de currículo e ferramentas avaliativas. Nossa vantagem comparativa é a qualidade na gestão de projetos educacionais, com foco na elaboração e implementação de projetos pedagógicos inovadores e eficazes, além de monitoramento e avaliação contínua.</p>
+    </div>
+  </section>
+  <div class="pagefoot"><div class="stripe"><i></i><i></i><i></i><i></i><i></i></div><div class="fbar"><span>Associação Cactus</span><span>Proposta SEDUC-PA · 2026/3001413</span></div></div>
+
+  <!-- ============================ 3. ESPECIFICAÇÕES ============================ -->
+  <div class="runhead">
+    <div class="brand">
+      <svg class="cactus" viewBox="0 0 24 40" fill="none"><path d="M12 4v32M12 14c0-4-3-6-6-6-1 0 0 8 6 8M12 20c0-4 3-6 6-6 1 0 0 8-6 8" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 36h6" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>
+      <small>Associação Cactus /<br>Recomposição das Aprendizagens · SEDUC-PA</small>
+    </div>
+    <div class="blocks"><i></i><i></i><i></i></div>
+  </div>
+
+  <section class="content" id="s3">
+    <h2 class="sec"><span class="n">3</span> Especificações do Programa e do Objeto</h2>
+
+    <h3 class="sub">3.1. Proposta Pedagógica</h3>
+    <p>A proposta pedagógica foi desenhada para atender integralmente ao escopo do Termo de Referência, articulando <strong>diagnóstico, experiência gamificada de aprendizagem, mentorias, avaliação e mobilização</strong> em um ciclo contínuo de melhoria, alinhado à BNCC e à Matriz de Referência do SAEB/ENEM. A solução se organiza em cinco eixos integrados, com foco no 9º ano do EF II e na 3ª série do EM.</p>
+
+    <div class="axes">
+      <div class="axis">
+        <span class="tag">Eixo 1 · Diagnóstico</span>
+        <h4>Análise de Proficiência</h4>
+        <p>Avaliação diagnóstica dos estudantes do 9º ano do EF II e da 3ª série do EM, com relatórios pedagógicos e gerenciais por estudante, turma, escola e DRE em <strong>4 momentos por ano</strong> (início, fim do 1º e 2º trimestres e fim do ano), subsidiando a seleção de mentores e mentorados e a premiação por evolução.</p>
+      </div>
+      <div class="axis">
+        <span class="tag">Eixo 2 · Experiência</span>
+        <h4>Plataforma Digital Gamificada</h4>
+        <p>Ambiente virtual personalizado ao território paraense, com trilhas adaptativas por nível de proficiência, olimpíadas e competições, aulas, quizzes, jogos, correção por IA e leitura óptica (OMR), acessível por computador, tablet e celular, em conformidade com a LGPD.</p>
+      </div>
+      <div class="axis">
+        <span class="tag">Eixo 3 · Mentorias</span>
+        <h4>Mentores e Mentorados</h4>
+        <p>Identificação dos <strong>5% de maior desempenho</strong> (mentores) e dos <strong>30% de menor desempenho</strong> (mentorados), com termo de aceite, capacitação, vínculo por turma/turno/escola/DRE, encontros semanais e registro dos avanços na plataforma.</p>
+      </div>
+      <div class="axis">
+        <span class="tag">Eixo 4 · Gestão</span>
+        <h4>Formação e Gestão Pedagógica</h4>
+        <p>Formação continuada das equipes da SEDUC, das DREs, das unidades escolares, dos docentes e dos mentores, com painéis de monitoramento em tempo real nos níveis Secretaria, DRE, escola, professor e mentor, e consultoria pedagógica ao longo de todo o contrato.</p>
+      </div>
+      <div class="axis" style="grid-column:1/-1">
+        <span class="tag">Eixo 5 · Mobilização</span>
+        <h4>Competições, Premiações e Material Didático</h4>
+        <p>Realização das competições e das duas premiações previstas no Termo de Referência (primeira premiação para adesão dos mentores e segunda premiação por cumprimento de metas), além do fornecimento de materiais didáticos impressos de Língua Portuguesa e Matemática, organizados por nível de proficiência e alinhados à BNCC e aos descritores do SAEB/ENEM.</p>
+      </div>
+    </div>
+
+    <h4 class="sub2">3.1.1. Diagnóstico da Aprendizagem</h4>
+    <p>O ponto de partida é a identificação precisa do nível de aprendizagem, por meio de avaliações diagnósticas que mapeiam habilidades e defasagens. Uma equipe técnica garante padronização, segurança e equidade na aplicação. Os instrumentos são alinhados à BNCC e à matriz SAEB/ENEM e produzem um retrato detalhado do desempenho individual e coletivo, com relatórios comparativos de aprendizagem, fluxo e frequência.</p>
+
+    <h4 class="sub2">3.1.2. Experiência de Aprendizagem</h4>
+    <p>Com base nas evidências diagnósticas, cada estudante é inserido em um percurso personalizado. A plataforma gamificada oferece trilhas adaptativas, olimpíadas estudantis, banco de itens e avaliações com metadados pedagógicos, plano de aula editável pelo professor, recursos de acessibilidade e apoio ao estudo por inteligência artificial e/ou mentor, promovendo recomposição e progressão contínua.</p>
+
+    <h4 class="sub2">3.1.3. Avaliações Formativas e Somativas</h4>
+    <p>A proposta integra avaliações diagnósticas, formativas e somativas, impressas e digitais, complementares entre si. As avaliações digitais adaptativas geram relatórios imediatos; as impressas contam com diagramação automática, cartão-resposta, leitura óptica (OMR) e correção automática dos itens objetivos, com exportação em PDF e resultados em formato aberto.</p>
+
+    <h4 class="sub2">3.1.4. Gestão Pedagógica</h4>
+    <p>A gestão é apoiada por uma camada tecnológica robusta que consolida dados das avaliações, da plataforma e das ações formativas. Painéis interativos apresentam, em tempo real, engajamento, desempenho e evolução dos indicadores, estruturados nos níveis Secretaria (toda a rede), DRE, escola, professor e mentor. Todo o processo é sustentado por consultoria pedagógica especializada e por operação assistida.</p>
+
+    <h4 class="sub2">3.1.5. Mobilização e Engajamento</h4>
+    <p>A aprendizagem é também um processo de pertencimento. As competições, olimpíadas de conhecimento e eventos de premiação valorizam o protagonismo dos estudantes e fortalecem o engajamento de toda a comunidade escolar, funcionando como instrumentos de motivação, celebração e reconhecimento dos avanços — consolidando uma cultura de aprendizagem sustentável.</p>
+  </section>
+  <div class="pagefoot"><div class="stripe"><i></i><i></i><i></i><i></i><i></i></div><div class="fbar"><span>Associação Cactus</span><span>Proposta SEDUC-PA · 2026/3001413</span></div></div>
+
+  <!-- ============================ 3.2 TABELA DESCRITIVA ============================ -->
+  <div class="runhead">
+    <div class="brand">
+      <svg class="cactus" viewBox="0 0 24 40" fill="none"><path d="M12 4v32M12 14c0-4-3-6-6-6-1 0 0 8 6 8M12 20c0-4 3-6 6-6 1 0 0 8-6 8" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 36h6" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>
+      <small>Associação Cactus /<br>Recomposição das Aprendizagens · SEDUC-PA</small>
+    </div>
+    <div class="blocks"><i></i><i></i><i></i></div>
+  </div>
+
+  <section class="content" id="s32">
+    <h3 class="sub" style="margin-top:6px">3.2. Tabela Descritiva dos Objetos</h3>
+    <p>A solução é composta pelos objetos abaixo, agrupados nos três módulos que estruturam a precificação. Cada objeto cobre integralmente as exigências do Termo de Referência (item 3 — Escopo dos Serviços) e é entregue com consultoria pedagógica, suporte técnico remoto e relatórios por estudante, turma, escola e DRE.</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th style="width:44px">Item</th><th style="width:220px">Objeto</th><th>Descrição</th><th style="width:120px">Referência TDR</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="obj-item">A</td><td><strong>Avaliação / Diagnóstico de Proficiência</strong></td><td>Avaliação impressa (com cartão-resposta e leitura óptica) e/ou digital — diagnóstica, formativa e somativa —, alinhada à BNCC e à matriz SAEB/ENEM, aplicada em 4 momentos por ano para o 9º ano do EF II e a 3ª série do EM. Inclui autoria de itens, correção, relatórios por estudante/turma/escola/DRE e dados comparativos de evolução.</td><td>3.1.2 · 5.7</td></tr>
+          <tr><td class="obj-item">B</td><td><strong>Aplicação Assistida</strong></td><td>Equipe técnica/aplicadores para a aplicação presencial das avaliações, garantindo padronização, segurança, logística dos cadernos e cartões e integridade do processo.</td><td>3.1.2 · 6.1</td></tr>
+          <tr><td class="obj-item">C</td><td><strong>Plataforma Gamificada de Recomposição</strong></td><td>Ambiente virtual personalizado com trilhas adaptativas por proficiência, olimpíadas e competições, aulas, quizzes, jogos, banco de itens, plano de aula editável, painéis por nível (SEDUC/DRE/escola/professor/mentor), recursos de acessibilidade, certificação digital e conformidade LGPD.</td><td>3.1.3</td></tr>
+          <tr><td class="obj-item">D</td><td><strong>Ambiente de Mentorias e Tutoria Digital</strong></td><td>Módulo de seleção, vínculo e acompanhamento de mentores (5%) e mentorados (30%), com capacitação, encontros semanais, metas individuais, registro de avanços e apoio ao estudo por IA e/ou mentor humano.</td><td>3.1.4</td></tr>
+          <tr><td class="obj-item">E</td><td><strong>Governança e Operação Assistida</strong></td><td>Definição e pactuação da governança, gestão da mudança, implementação e operação assistida ao longo do contrato, com relatórios mensais de monitoramento e transferência de conhecimento para a autonomia da SEDUC.</td><td>3.1.1 · 3.1.6 · 5.3</td></tr>
+          <tr><td class="obj-item">F</td><td><strong>Formação Continuada de Educadores</strong></td><td>Programa de formação continuada, preferencialmente presencial, para equipes da SEDUC, gestores das DREs e das escolas, docentes e mentores, com ambiente de simulação, manuais digitais, relatórios de participação e certificação.</td><td>3.1.5</td></tr>
+          <tr><td class="obj-item">G</td><td><strong>Material Didático Impresso (LP e Matemática)</strong></td><td>Materiais impressos de Língua Portuguesa e Matemática organizados por nível de proficiência, com progressão evidenciável, edição do professor (gabarito e resolução comentada), mapeamento à BNCC/SAEB e acompanhamento da impressão e logística de distribuição.</td><td>3.1.10</td></tr>
+          <tr><td class="obj-item">H</td><td><strong>Eventos e Premiações</strong></td><td>Realização e gerenciamento da primeira premiação (adesão dos mentores) e da segunda premiação (cumprimento de metas), com produção completa do evento, identidade visual, cerimonial, cobertura e integração às metas pedagógicas da rede.</td><td>3.1.7 · 3.1.8 · 3.1.9</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Observação: a impressão e a distribuição em larga escala dos materiais podem ser contratadas para além deste contrato, cabendo à Consultora o acompanhamento da logística, conforme o item 2.2 do Termo de Referência.</p>
+  </section>
+  <div class="pagefoot"><div class="stripe"><i></i><i></i><i></i><i></i><i></i></div><div class="fbar"><span>Associação Cactus</span><span>Proposta SEDUC-PA · 2026/3001413</span></div></div>
+
+  <!-- ============================ 4. PRECIFICAÇÃO ============================ -->
+  <div class="runhead">
+    <div class="brand">
+      <svg class="cactus" viewBox="0 0 24 40" fill="none"><path d="M12 4v32M12 14c0-4-3-6-6-6-1 0 0 8 6 8M12 20c0-4 3-6 6-6 1 0 0 8-6 8" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 36h6" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>
+      <small>Associação Cactus /<br>Recomposição das Aprendizagens · SEDUC-PA</small>
+    </div>
+    <div class="blocks"><i></i><i></i><i></i></div>
+  </div>
+
+  <section class="content" id="s4">
+    <h2 class="sec"><span class="n">4</span> Precificação dos Objetos</h2>
+
+    <h3 class="sub">4.1. Valor dos Objetos e Escopo da Solução</h3>
+    <p>A seguir, apresentam-se os objetos que compõem a proposta comercial da Cactus e seus respectivos valores, expressos em reais (R$). Os valores refletem o investimento necessário para a implementação integral da solução educacional adaptativa e gamificada, considerando todas as funcionalidades, serviços e entregas que asseguram resultados pedagógicos consistentes e mensuráveis. A composição foi elaborada de forma clara e objetiva, sob o regime de <strong>Preço Global</strong> (sem despesas reembolsáveis), para permitir à Administração Pública avaliar a relação custo-benefício, dentro dos princípios da transparência e da economicidade.</p>
+
+    <div class="callout">
+      <p style="margin:0"><strong>Nota sobre os valores:</strong> os campos de valor unitário, quantidades e subtotais estão <span style="color:#b07d00;font-weight:700">assinalados para preenchimento</span>. A estrutura de módulos, unidades e fórmulas já está pronta; basta inserir os valores negociados para que os subtotais e o Valor Global sejam compostos.</p>
+    </div>
+
+    <h3 class="sub" id="s42">4.2. Precificação — Solução Cactus</h3>
+    <p>A precificação organiza-se em <strong>três módulos macro</strong>, cada um com seus objetos, unidade de medida e valor unitário. Os subtotais de cada módulo resultam da combinação entre quantitativos (nº de estudantes, aplicações, meses ou eventos) e valores unitários; a soma dos três módulos compõe o <strong>Valor Global da Solução</strong>.</p>
+
+    <!-- MÓDULO 1 -->
+    <div class="module-band" id="m1">MÓDULO 1 — AVALIAÇÕES E DIAGNÓSTICO PEDAGÓGICO <span class="mtot">Subtotal: R$ <span class="fill">&nbsp;</span></span></div>
+    <div class="tbl-wrap" style="margin-top:0">
+      <table>
+        <thead><tr><th style="width:44px">Item</th><th>Objeto</th><th style="width:160px">Unidade</th><th class="val" style="width:130px">Valor unitário</th></tr></thead>
+        <tbody>
+          <tr><td class="obj-item">A</td><td>Avaliação Física (impressa, com OMR) — diagnóstica, formativa e somativa</td><td class="unit">Aplicação por aluno</td><td class="val">R$ <span class="fill">&nbsp;</span></td></tr>
+          <tr><td class="obj-item">A</td><td>Avaliação Digital Adaptativa — diagnóstica, formativa e somativa</td><td class="unit">Aplicação por aluno</td><td class="val">R$ <span class="fill">&nbsp;</span></td></tr>
+          <tr><td class="obj-item">B</td><td>Aplicador presencial (aplicação assistida das provas físicas)</td><td class="unit">Aplicador por prova</td><td class="val">R$ <span class="fill">&nbsp;</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout" style="margin-top:8px">
+      <p style="margin:0 0 6px"><strong>Composição do Módulo 1</strong> (4 aplicações/ano para 9º ano EF II e 3ª série EM):</p>
+      <p style="margin:0">a) Provas físicas: <span class="fill">qtd. alunos</span> × <span class="fill">nº aplic.</span> × R$ <span class="fill">&nbsp;</span> = R$ <span class="fill">&nbsp;</span><br>
+      b) Provas digitais: <span class="fill">qtd. alunos</span> × <span class="fill">nº aplic.</span> × R$ <span class="fill">&nbsp;</span> = R$ <span class="fill">&nbsp;</span><br>
+      c) Aplicadores: <span class="fill">qtd.</span> × <span class="fill">nº provas</span> × R$ <span class="fill">&nbsp;</span> = R$ <span class="fill">&nbsp;</span></p>
+    </div>
+
+    <!-- MÓDULO 2 -->
+    <div class="module-band" id="m2">MÓDULO 2 — PLATAFORMAS DE APRENDIZAGEM <span class="mtot">Subtotal: R$ <span class="fill">&nbsp;</span></span></div>
+    <div class="tbl-wrap" style="margin-top:0">
+      <table>
+        <thead><tr><th style="width:44px">Item</th><th>Objeto</th><th style="width:160px">Unidade</th><th class="val" style="width:130px">Valor unitário</th></tr></thead>
+        <tbody>
+          <tr><td class="obj-item">C</td><td>Plataforma Gamificada de Recomposição (olimpíadas, aulas, avaliações, painéis, LGPD)</td><td class="unit">Licença mensal por aluno</td><td class="val">R$ <span class="fill">&nbsp;</span></td></tr>
+          <tr><td class="obj-item">D</td><td>Ambiente de Mentorias e Tutoria Digital (mentores e mentorados, apoio por IA)</td><td class="unit">Licença mensal por aluno</td><td class="val">R$ <span class="fill">&nbsp;</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout" style="margin-top:8px">
+      <p style="margin:0 0 6px"><strong>Composição do Módulo 2</strong> (licenças ao longo da vigência):</p>
+      <p style="margin:0">a) Plataforma Gamificada: <span class="fill">qtd. alunos</span> × R$ <span class="fill">&nbsp;</span> × <span class="fill">nº meses</span> = R$ <span class="fill">&nbsp;</span><br>
+      b) Mentorias e Tutoria Digital: <span class="fill">qtd. alunos</span> × R$ <span class="fill">&nbsp;</span> × <span class="fill">nº meses</span> = R$ <span class="fill">&nbsp;</span></p>
+    </div>
+
+    <!-- MÓDULO 3 -->
+    <div class="module-band" id="m3">MÓDULO 3 — SERVIÇOS COMPLEMENTARES <span class="mtot">Subtotal: R$ <span class="fill">&nbsp;</span></span></div>
+    <div class="tbl-wrap" style="margin-top:0">
+      <table>
+        <thead><tr><th style="width:44px">Item</th><th>Objeto</th><th style="width:160px">Unidade</th><th class="val" style="width:130px">Valor</th></tr></thead>
+        <tbody>
+          <tr><td class="obj-item">E</td><td>Governança, Consultoria Pedagógica e Operação Assistida</td><td class="unit">Valor anual / global</td><td class="val">R$ <span class="fill">&nbsp;</span></td></tr>
+          <tr><td class="obj-item">F</td><td>Formação Continuada (SEDUC, DREs, escolas, docentes e mentores)</td><td class="unit">Por turma / global</td><td class="val">R$ <span class="fill">&nbsp;</span></td></tr>
+          <tr><td class="obj-item">G</td><td>Material Didático Impresso (Língua Portuguesa e Matemática por nível)</td><td class="unit">Por exemplar</td><td class="val">R$ <span class="fill">&nbsp;</span></td></tr>
+          <tr><td class="obj-item">H</td><td>Eventos e Premiações (primeira e segunda premiação)</td><td class="unit">Por evento</td><td class="val">R$ <span class="fill">&nbsp;</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- VALOR GLOBAL -->
+    <div class="global" id="sglobal">
+      <div class="top">Valor Global da Solução Cactus</div>
+      <div class="rows">
+        <div class="r"><span>Módulo 1 — Avaliações e Diagnóstico Pedagógico</span><strong>R$ <span class="fill">&nbsp;</span></strong></div>
+        <div class="r"><span>Módulo 2 — Plataformas de Aprendizagem</span><strong>R$ <span class="fill">&nbsp;</span></strong></div>
+        <div class="r"><span>Módulo 3 — Serviços Complementares</span><strong>R$ <span class="fill">&nbsp;</span></strong></div>
+        <div class="r tot"><span>VALOR GLOBAL (36 meses)</span><span>R$ <span class="fill">&nbsp;</span></span></div>
+      </div>
+    </div>
+    <p class="note">Valor por extenso: ________________________________________________. Regime de Preço Global, conforme item 6.2.4 do Termo de Referência.</p>
+
+    <h3 class="sub" id="s43">4.3. Considerações Finais</h3>
+    <p>A presente proposta apresenta a Solução Educacional Cactus como um conjunto integrado de ações pedagógicas, tecnológicas e operacionais, estruturadas em três módulos complementares: <strong>Avaliações e Diagnóstico Pedagógico, Plataformas de Aprendizagem e Serviços Complementares</strong>. A solução foi desenvolvida para apoiar a SEDUC-PA no diagnóstico, no acompanhamento e no fortalecimento das aprendizagens do 9º ano do EF II e da 3ª série do EM, garantindo padronização de processos, rastreabilidade de dados, conformidade com a LGPD e suporte técnico contínuo às escolas ao longo dos 36 meses de vigência.</p>
+    <ul class="clean">
+      <li><strong>Avaliações e diagnóstico integrados</strong> — instrumentos alinhados à BNCC e ao SAEB/ENEM, impressos e digitais, com relatórios por estudante, turma, escola e DRE.</li>
+      <li><strong>Plataforma gamificada e mentorias</strong> — trilhas adaptativas, olimpíadas, tutoria digital e o programa de mentores e mentorados.</li>
+      <li><strong>Formação, materiais, eventos e governança</strong> — formação continuada, materiais impressos de LP e Matemática, premiações e operação assistida para a autonomia da rede.</li>
+    </ul>
+  </section>
+  <div class="pagefoot"><div class="stripe"><i></i><i></i><i></i><i></i><i></i></div><div class="fbar"><span>Associação Cactus</span><span>Proposta SEDUC-PA · 2026/3001413</span></div></div>
+
+  <!-- ============================ 5. DADOS DA PROPONENTE ============================ -->
+  <div class="runhead">
+    <div class="brand">
+      <svg class="cactus" viewBox="0 0 24 40" fill="none"><path d="M12 4v32M12 14c0-4-3-6-6-6-1 0 0 8 6 8M12 20c0-4 3-6 6-6 1 0 0 8-6 8" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 36h6" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>
+      <small>Associação Cactus /<br>Recomposição das Aprendizagens · SEDUC-PA</small>
+    </div>
+    <div class="blocks"><i></i><i></i><i></i></div>
+  </div>
+
+  <section class="content" id="s5">
+    <h2 class="sec"><span class="n">5</span> Dados da Proponente e Validade</h2>
+    <div class="company">
+      <div class="cell"><div class="k">Empresa / Razão Social</div><div class="v">Associação Cactus</div></div>
+      <div class="cell"><div class="k">CNPJ</div><div class="v">__________________________</div></div>
+      <div class="cell"><div class="k">Endereço</div><div class="v">__________________________</div></div>
+      <div class="cell"><div class="k">Fone / Fax</div><div class="v">__________________________</div></div>
+      <div class="cell"><div class="k">E-mail</div><div class="v">cactus.tech@associacaocactus.com.br</div></div>
+      <div class="cell"><div class="k">Responsável pelo encaminhamento</div><div class="v">__________________________</div></div>
+    </div>
+
+    <div class="callout">
+      <p style="margin:0"><strong>Validade da proposta:</strong> 90 (noventa) dias, a contar da data de apresentação. <strong>Regime:</strong> Preço Global, sem despesas reembolsáveis (item 6.2.4 do TDR). <strong>Vigência da execução:</strong> 36 (trinta e seis) meses a contar da assinatura do contrato.</p>
+    </div>
+
+    <div class="sign">
+      <div class="line"></div>
+      <div>Nome e assinatura do responsável</div>
+      <small>Associação Cactus · Belém/PA, ______ de ______________ de 2026</small>
+    </div>
+  </section>
+
+  <div class="pagefoot"><div class="stripe"><i></i><i></i><i></i><i></i><i></i></div><div class="fbar"><span>Associação Cactus</span><span>Proposta SEDUC-PA · Cotação nº 2026/3001413</span></div></div>
+
+</div>
+</body>
+</html>
